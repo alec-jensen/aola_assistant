@@ -1,1 +1,1 @@
-# aola_assistant
+# Aola Assistant
