@@ -5,7 +5,8 @@ import os
 from gtts import gTTS
 import random
 from playsound import playsound
-
+from os import path
+from pydub import AudioSegment
 
 def listen():
     r = sr.Recognizer()
@@ -16,29 +17,34 @@ def listen():
     try:
         data = r.recognize_google(audio)
         print(data)
-        if 'Paola' not in data.lower().split():
-            return data
-        else:
+        #if 'Paola' not in data.lower().split():
+        #    return data
+        #else:
             print(data)
     except sr.UnknownValueError:
         print("Google Speech Recognition did not understand audio")
     except sr.RequestError as e:
-        print("Request Failed; {0}".format(e))
+        print(f"Request Failed; {e}")
     return data
 
 
 def respond(audioString):
-    if audioString == "Hello! I am Ayola, a virtual assistant.":
-        print("Hello! I am Aola, a virtual assistant")
-    elif audioString == "Yo! Im Ayola, the coolest virtual assistant there is!":
-        print("Yo! Im Aola, the coolest virtual assistant there is!")
-    else:
-        print(audioString)
-    tts = gTTS(text=audioString, lang='en')
-    tts.save("speech.mp3")
-    playsound("speech.mp3")
-    os.remove("speech.mp3")
-
+    try:
+        gTTS(text=audioString, lang='en').save("speech.mp3")
+        AudioSegment.from_mp3('speech.mp3').export('speech.wav', format="wav")
+        if audioString == "Hello! I am Ayola, a virtual assistant.":
+            print("Hello! I am Aola, a virtual assistant")
+        elif audioString == "Yo! Im Ayola, the coolest virtual assistant there is!":
+            print("Yo! Im Aola, the coolest virtual assistant there is!")
+        else:
+            print(audioString)
+        playsound("speech.wav")
+        os.remove("speech.mp3")
+        os.remove("speech.wav")
+    except:
+        print('No internet connection! Please try again later.')
+        playsound('aolanointernet.wav')
+    
 
 def digital_assistant(data):
     if "hello" in data or "hi" in data or "yo" in data or 'high' in data:
@@ -82,19 +88,21 @@ def digital_assistant(data):
 
     else:
         listening = True
-        respond("I didn't quite catch that")
+        print("I didn't quite catch that.")
+        playsound('aolaerror.wav')
     return listening
 
 
 time.sleep(2)
-respond('Hello!')
+print('Hello!')
+playsound('aolahello.wav')
 listening = True
 wakeword = 'paola'
 timer = 4
 while listening == True:
-    data = listen().lower().split(' ')
-    listening = digital_assistant(data)
-    #if wakeword in listen().lower().split():
-        #data = listen().lower().split(' ')
-        #listening = digital_assistant(data)
-    #data = input().lower().split(' ')
+	data = input().lower().split(' ')
+	#data = listen().lower().split(' ')
+	listening = digital_assistant(data)
+	#if wakeword in listen().lower().split():
+		#data = listen().lower().split(' ')
+		#listening = digital_assistant(data)
