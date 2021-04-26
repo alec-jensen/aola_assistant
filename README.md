@@ -4,3 +4,5 @@
 2. Download the files.
 3. Run `python3 [path_to_aola]\aolaassistant.py` replacing `[path_to_aola]` with the file path to aola.
 4. Enjoy!
+
+*You may need to install some dependancies*
